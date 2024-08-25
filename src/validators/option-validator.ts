@@ -7,16 +7,19 @@ import { PRODUCT_PRICES } from "@/config/products"
 export const COLORS=[
     {
         label:"Black",
+        value:"black",
         ValueIcon:"black",
         tw:"zinc-900"
     },
     {
         label:"Blue",
+        value:"blue",
         ValueIcon:"blue",
         tw:"blue-950" 
     },
     {
         label:"Rose",
+        value:"rose",   
         ValueIcon:"rose",
         tw:"rose-950" 
     }
