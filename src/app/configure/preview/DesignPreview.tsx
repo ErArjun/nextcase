@@ -1,4 +1,5 @@
 "use client";
+
 import LoginModal from "@/components/LoginModal";
 import Phone from "@/components/Phone";
 import { Button } from "@/components/ui/button";
@@ -13,18 +14,20 @@ import { ArrowRight, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
-import { createCheckoutSession } from "./action";
+import { createCheckoutSession } from "./actions";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const { id } = configuration;
   const { user } = useKindeBrowserClient();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   useEffect(() => setShowConfetti(true), []);
 
-  const { id, color, model, finish, material } = configuration;
+  const { color, model, finish, material } = configuration;
+
   const tw = COLORS.find(
     (supportedColor) => supportedColor.value === color
   )?.tw;
@@ -38,20 +41,17 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     totalPrice += PRODUCT_PRICES.material.polycarbonate;
   if (finish === "textured") totalPrice += PRODUCT_PRICES.finish.textured;
 
-  const { mutate: createPaymentSession, isPending } = useMutation({
+  const { mutate: createPaymentSession } = useMutation({
     mutationKey: ["get-checkout-session"],
     mutationFn: createCheckoutSession,
     onSuccess: ({ url }) => {
-      if (url) {
-        router.push(url);
-      } else {
-        throw new Error("Unable to retrieve payment url");
-      }
+      if (url) router.push(url);
+      else throw new Error("Unable to retrieve payment URL.");
     },
     onError: () => {
       toast({
         title: "Something went wrong",
-        description: "There was an error processing your payment",
+        description: "There was an error on our end. Please try again.",
         variant: "destructive",
       });
     },
@@ -59,8 +59,10 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
   const handleCheckout = () => {
     if (user) {
+      // create payment session
       createPaymentSession({ configId: id });
     } else {
+      // need to log in
       localStorage.setItem("configurationId", id);
       setIsLoginModalOpen(true);
     }
@@ -81,7 +83,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
       <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
 
       <div className="mt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
-        <div className="sm:col-span-4 md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2">
+        <div className="md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2">
           <Phone
             className={cn(`bg-${tw}`, "max-w-[150px] md:max-w-full")}
             imgSrc={configuration.croppedImageUrl!}
@@ -94,7 +96,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
           </h3>
           <div className="mt-3 flex items-center gap-1.5 text-base">
             <Check className="h-4 w-4 text-green-500" />
-            In Stock and Ready to Ship
+            In stock and ready to ship
           </div>
         </div>
 
@@ -105,19 +107,19 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
               <ol className="mt-3 text-zinc-700 list-disc list-inside">
                 <li>Wireless charging compatible</li>
                 <li>TPU shock absorption</li>
-                <li>Packaging made from recycle material</li>
+                <li>Packaging made from recycled materials</li>
                 <li>5 year print warranty</li>
               </ol>
             </div>
-
             <div>
               <p className="font-medium text-zinc-950">Materials</p>
               <ol className="mt-3 text-zinc-700 list-disc list-inside">
-                <li>High quality durable material</li>
-                <li>Scratch and fingerprint resistant coating</li>
+                <li>High-quality, durable material</li>
+                <li>Scratch- and fingerprint resistant coating</li>
               </ol>
             </div>
           </div>
+
           <div className="mt-8">
             <div className="bg-gray-50 p-6 sm:rounded-lg sm:p-8">
               <div className="flow-root text-sm">
@@ -127,6 +129,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                     {formatPrice(BASE_PRICE / 100)}
                   </p>
                 </div>
+
                 {finish === "textured" ? (
                   <div className="flex items-center justify-between py-1 mt-2">
                     <p className="text-gray-600">Textured finish</p>
@@ -155,15 +158,13 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                 </div>
               </div>
             </div>
+
             <div className="mt-8 flex justify-end pb-12">
               <Button
-                disabled={isPending}
                 onClick={() => handleCheckout()}
-                isLoading={isPending}
-                loadingText="loading"
+                className="px-4 sm:px-6 lg:px-8"
               >
-                Check out
-                <ArrowRight className="w-4 h-4 ml-1.5 inline" />
+                Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />
               </Button>
             </div>
           </div>
@@ -172,4 +173,5 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     </>
   );
 };
+
 export default DesignPreview;
