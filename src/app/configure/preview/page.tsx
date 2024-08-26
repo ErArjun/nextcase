@@ -1,6 +1,4 @@
-"use server";
 import { db } from "@/db";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { notFound } from "next/navigation";
 import DesignPreview from "./DesignPreview";
 
@@ -25,14 +23,7 @@ const Page = async ({ searchParams }: PageProps) => {
     return notFound();
   }
 
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  let userId;
-  if (user) {
-    userId = user.id;
-  }
-
-  return <DesignPreview configuration={configuration} userId={userId!} />;
+  return <DesignPreview configuration={configuration} />;
 };
 
 export default Page;

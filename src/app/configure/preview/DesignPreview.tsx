@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { cn, formatPrice } from "@/lib/utils";
 import { COLORS, MODELS } from "@/validators/option-validator";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { Configuration } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
@@ -15,17 +16,11 @@ import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
 import { createCheckoutSession } from "./actions";
 
-const DesignPreview = ({
-  configuration,
-  userId,
-}: {
-  configuration: Configuration;
-  userId: string;
-}) => {
+const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const router = useRouter();
   const { toast } = useToast();
   const { id } = configuration;
-  // const { user } = useKindeBrowserClient();
+  const { user } = useKindeBrowserClient();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
@@ -63,7 +58,7 @@ const DesignPreview = ({
   });
 
   const handleCheckout = () => {
-    if (userId) {
+    if (user) {
       // create payment session
       createPaymentSession({ configId: id });
     } else {
