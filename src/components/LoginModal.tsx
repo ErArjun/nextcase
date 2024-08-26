@@ -1,4 +1,7 @@
-import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
+import {
+  LoginLink,
+  RegisterLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
 import { buttonVariants } from "./ui/button";
