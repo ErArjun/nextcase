@@ -63,7 +63,7 @@ export async function POST(req: Request, res: Response) {
         }
        })
 
-       console.log("starting to send email")
+
        await resend.emails.send({
         from:"onboarding@resend.dev",
         to: [session.customer_details?.email!],
@@ -81,7 +81,6 @@ export async function POST(req: Request, res: Response) {
             }
         })
        })
-       console.log("email sent")
     }
     return NextResponse.json({result:event,ok:true})
  }
