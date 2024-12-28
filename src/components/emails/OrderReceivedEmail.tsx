@@ -31,13 +31,14 @@ const OrderReceivedEmail = ({
   orderDate: string;
 }) => {
   const baseUrl =
-    process.env.NODE_ENV == "development"
+    process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
       : "https://nextcase.vercel.app";
+
   return (
     <Html>
       <Head />
-      <Preview>Your order summary and estimated date</Preview>
+      <Preview>Your order summary and estimated delivery date</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={message}>
@@ -50,25 +51,25 @@ const OrderReceivedEmail = ({
             />
             <Heading style={global.heading}>Thank you for your order!</Heading>
             <Text style={global.text}>
-              Your order has been received and is now being processed. Your
-              order details are shown below for your reference:
+              We're preparing everything for delivery and will notify you once
+              your package has been shipped. Delivery usually takes 2 days.
             </Text>
             <Text style={{ ...global.text, marginTop: 24 }}>
-              If you have any questions about your order, please contact us with
-              your order number and we will be happy to help.
+              If you have any questions regarding your order, please feel free
+              to contact us with your order number and we're here to help.
             </Text>
           </Section>
           <Hr style={global.hr} />
           <Section style={global.defaultPadding}>
             <Text style={adressTitle}>Shipping to: {shippingAddress.name}</Text>
             <Text style={{ ...global.text, fontSize: 14 }}>
-              Shipping to: {shippingAddress.street},{shippingAddress.city},
+              {shippingAddress.street}, {shippingAddress.city},{" "}
               {shippingAddress.state} {shippingAddress.postalCode}
             </Text>
           </Section>
           <Hr style={global.hr} />
           <Section style={global.defaultPadding}>
-            <Row style={{ display: "inline-flex", marginBottom: 40 }}>
+            <Row style={{ display: "inline-flex gap-16", marginBottom: 40 }}>
               <Column style={{ width: 170 }}>
                 <Text style={global.paragraphWithBold}>Order Number</Text>
                 <Text style={track.number}>{orderId}</Text>
@@ -79,7 +80,9 @@ const OrderReceivedEmail = ({
               </Column>
             </Row>
           </Section>
+
           <Hr style={global.hr} />
+
           <Section style={paddingY}>
             <Row>
               <Text
@@ -89,13 +92,13 @@ const OrderReceivedEmail = ({
                   paddingBottom: 30,
                 }}
               >
-                Please contact us if you have any questions about your order.
-                (if you reply to this email, it will not be received)
+                Please contact us if you have any questions. (If you reply to
+                this email, we won't be able to see it.)
               </Text>
             </Row>
             <Row>
               <Text style={footer.text}>
-                &copy; NextCase, Inc. All rights reserved.
+                © CaseCobra, Inc. All Rights Reserved.
               </Text>
             </Row>
           </Section>

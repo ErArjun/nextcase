@@ -63,23 +63,25 @@ export async function POST(req: Request, res: Response) {
         }
        })
 
+       console.log("starting to send email")
        await resend.emails.send({
-        from:"NextCase <er.arjunbhandari@gmail.com>",
-        to:event.data.object.customer_details.email,
-        subject:"Thank you for your order",
-        react:OrderReceivedEmail({
-            orderId,
-            orderDate:updatedOrder.createdAt.toLocaleDateString(),
-            shippingAddress:{
-                name:session.customer_details!.name!,
-                city:shippingAddress!.city!,
-                country:shippingAddress!.country!,
-                postalCode:shippingAddress!.postal_code!,
-                street:shippingAddress!.line1!,
-                state:shippingAddress!.state!
+        from:"onboarding@resend.dev",
+        to: [session.customer_details?.email!],
+        subject: 'Thanks for your order!',
+        react: OrderReceivedEmail({
+          orderId,
+          orderDate: updatedOrder.createdAt.toLocaleDateString(),
+          shippingAddress: {
+            name: session.customer_details!.name!,
+            city: shippingAddress!.city!,
+            country: shippingAddress!.country!,
+            postalCode: shippingAddress!.postal_code!,
+            street: shippingAddress!.line1!,
+            state: shippingAddress!.state,
             }
         })
        })
+       console.log("email sent")
     }
     return NextResponse.json({result:event,ok:true})
  }
