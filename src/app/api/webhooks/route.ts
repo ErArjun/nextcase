@@ -28,6 +28,7 @@ export async function POST(req: Request, res: Response) {
         userId: null,
         orderId: null
        }
+       console.log(session.metadata)
 
        if(!userId || !orderId){
            throw new Error('Invalid request Metadata')
@@ -62,10 +63,9 @@ export async function POST(req: Request, res: Response) {
             }
         }
        })
-
-
+       
        await resend.emails.send({
-        from:"onboarding@resend.dev",
+        from:`Support <${process.env.SENDER_EMAIL}>`,
         to: [session.customer_details?.email!],
         subject: 'Thanks for your order!',
         react: OrderReceivedEmail({
